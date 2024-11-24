@@ -4,8 +4,13 @@
   "description": "tinder for developers",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Om Keshri",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
 }
