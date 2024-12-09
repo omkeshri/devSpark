@@ -37,10 +37,9 @@ app.get("/user", async (req, res) => {
 
     if (users.length === 0) {
       res.status(404).send("User not found.");
+    } else {
+      res.send(users);
     }
-
-    res.send(users);
-
   } catch (err) {
     res.status(400).send("Something went wrong!");
   }
@@ -48,13 +47,36 @@ app.get("/user", async (req, res) => {
 
 // Feed API - GET /feed - get all the user data from the database
 app.get("/feed", async (req, res) => {
-  try{
-    const users = await User.find({})
-    res.send(users)
+  try {
+    const users = await User.find({});
+    res.send(users);
+  } catch (err) {
+    res.status(400).send("Something went wrong.");
+  }
+});
 
+// Delete user from database
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId;
 
-  }catch(err){
-    res.status(400).send("Something went wrong.")
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    res.send("User Deleted Successfully!");
+  } catch (err) {
+    res.status(400).send("Something went wrong");
+  }
+});
+
+// Update user in database
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+
+  try {
+    await User.findByIdAndUpdate({ _id: userId }, data);
+    res.send("User updated successfully");
+  } catch (err) {
+    res.status(400).send("Something went wrong.");
   }
 });
 
