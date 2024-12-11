@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     firstName: {
       type: String,
       required: true,
-      minLength: 4,
+      minLength: 1,
       maxLength: 50,
     },
     lastName: {
@@ -48,11 +48,11 @@ const userSchema = new mongoose.Schema(
     photoUrl: {
       type: String,
       default: "url",
-      validate(value){
-        if(!validator.isURL(value)){
-          throw new Error("Invalid URL")
-        }
-      }
+      // validate(value){
+      //   if(value && !validator.isURL(value)){
+      //     throw new Error("Invalid URL")
+      //   }
+      // }
     },
     about: {
       type: String,

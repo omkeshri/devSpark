@@ -1,6 +1,8 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const connectDB = require("./config/database.js");
 const User = require("./models/user.js");
+const { validateSignUpData } = require("./utils/validation.js");
 
 const app = express();
 
@@ -16,13 +18,60 @@ app.post("/signup", async (req, res, next) => {
     gender: "Male",
   };
 
-  // Creating a new instance of the User model
-  // const user = new User(userObj);
-  const user = new User(req.body);
-
   try {
+    validateSignUpData(req);
+
+    const {
+      firstName,
+      lastName,
+      password,
+      age,
+      gender,
+      skills,
+      photoUrl,
+      about,
+      emailId,
+    } = req.body;
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    // Creating a new instance of the User model
+    // const user = new User(userObj);
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: passwordHash,
+      age,
+      gender,
+      skills,
+      photoUrl,
+      about,
+    });
+
     await user.save();
     res.send("User Added Successfully!");
+  } catch (err) {
+    res.status(400).send("Error Saving the User: " + err.message);
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+    const user = await User.findOne({ emailId: emailId });
+
+    if (!user){
+      throw new Error("Invalid Credentials.");
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if(!isPasswordValid){
+      throw new Error("Invalid Credentials");
+    }
+    else{
+      res.send("User Logged in Successfully!")
+    }
+
   } catch (err) {
     res.status(400).send("Error Saving the User: " + err.message);
   }
@@ -93,6 +142,7 @@ app.patch("/user/:userId", async (req, res) => {
     // if(data?.skills.length > 10){
     //   throw new Error("Cannot add more than 10 skills.")
     // }
+
     // await User.findByIdAndUpdate({ _id: userId }, data);
     const user = await User.findByIdAndUpdate({ _id: userId }, data, {
       returnDocument: "before",
