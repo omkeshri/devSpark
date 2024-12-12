@@ -1,11 +1,14 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const connectDB = require("./config/database.js");
 const User = require("./models/user.js");
 const { validateSignUpData } = require("./utils/validation.js");
+const { userAuth } = require("./middlewares/auth");
 
 const app = express();
-
+app.use(cookieParser());
 app.use(express.json());
 
 app.post("/signup", async (req, res, next) => {
@@ -60,22 +63,40 @@ app.post("/login", async (req, res) => {
     const { emailId, password } = req.body;
     const user = await User.findOne({ emailId: emailId });
 
-    if (!user){
+    if (!user) {
       throw new Error("Invalid Credentials.");
     }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = user.verifyPassword(password);
 
-    if(!isPasswordValid){
-      throw new Error("Invalid Credentials");
-    }
-    else{
-      res.send("User Logged in Successfully!")
-    }
+    if (!isPasswordValid) {
+      throw new Error("Invalid Credentials ");
+    } else {
+      const token = await user.getJWT();
 
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+      });
+      res.send("User Logged in Successfully!");
+    }
   } catch (err) {
     res.status(400).send("Error Saving the User: " + err.message);
   }
 });
+
+app.get("/profile", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("Error Saving the User: " + err.message);
+  }
+});
+
+app.post("/sendConnectionRequest", userAuth, async (req, res)=> {
+  const user = req.user;
+  res.send(user.firstName + " is sending you connection request.")
+})
+
 
 // GET user by email
 app.get("/user", async (req, res) => {
