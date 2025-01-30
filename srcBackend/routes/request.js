@@ -65,7 +65,7 @@ requestRouter.post(
         return res.json({ message: "Status not allowed!" });
       }
 
-      const connectionRequest = ConnectionRequest.findOne({
+      const connectionRequest = await ConnectionRequest.findOne({
         _id: requestId,
         toUserId: loggedInUser._id,
         status: "interested",
@@ -75,13 +75,14 @@ requestRouter.post(
         res.status(404).json({
           message: "Connection request not found",
         });
+      } else {
+        connectionRequest.status = status;
+        const data = await connectionRequest.save();
+        res.json({
+          message: "Connection request " + status,
+          data: data,
+        });
       }
-      connectionRequest.status = status;
-      const data = await ConnectionRequest.save();
-      res.json({
-        message: "Connection request " + status,
-        data: data,
-      });
     } catch (err) {
       res.status(400).send("ERROR: " + err);
     }
