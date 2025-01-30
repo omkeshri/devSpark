@@ -50,12 +50,12 @@ authRouter.post("/login", async (req, res) => {
     const user = await User.findOne({ emailId: emailId });
 
     if (!user) {
-      throw new Error("Invalid Credentials.");
+      throw new Error("Invalid Credentials");
     }
     const isPasswordValid = user.verifyPassword(password);
 
     if (!isPasswordValid) {
-      throw new Error("Invalid Credentials ");
+      throw new Error("Invalid Credentials");
     } else {
       const token = await user.getJWT();
 
@@ -65,7 +65,7 @@ authRouter.post("/login", async (req, res) => {
       res.send(user);
     }
   } catch (err) {
-    res.status(400).send("Error Saving the User: " + err.message);
+    res.status(400).send(err.message);
   }
 });
 
@@ -74,7 +74,7 @@ authRouter.post("/logout", async (req, res) => {
     expires: new Date(Date.now()),
   });
 
-  res.send("Log Out Successfull");
+  res.send("Log Out Successfull!");
 });
 
 module.exports = authRouter;
