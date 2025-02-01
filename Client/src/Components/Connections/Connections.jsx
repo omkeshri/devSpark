@@ -32,17 +32,17 @@ const Connections = () => {
       <h1 className="text-center font-bold text-4xl ">Connections</h1>
       <div className=" mx-10 my-10">
         {connections.map((connection) => {
-          const { firsName, lastName, photoUrl, age, gender, about } =
+          const {_id, firstName, lastName, photoUrl, age, gender, about } =
             connection;
           return (
-            <div className="flex gap-10 bg-black p-5 bg-opacity-20 w-1/3 rounded-lg">
+            <div key={_id} className="flex gap-10 bg-black p-5 bg-opacity-20 w-1/3 rounded-lg">
               <img
-                src={connection.photoUrl}
+                src={photoUrl}
                 alt="image"
                 className="w-40 h-40 rounded-full"
               ></img>
               <div>
-                <h2 className="font-bold text-2xl">{connection.firsName + " " + connection.lastName}</h2>
+                <h2 className="font-bold text-2xl">{firstName + " " + lastName}</h2>
                 <h2 className="font-medium">{age + ", " + gender }</h2>
                 <h2 className="font-medium">{about}</h2>
               </div>
