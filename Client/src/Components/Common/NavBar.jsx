@@ -4,6 +4,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../Utils/constants";
 import axios from "axios";
 import { removeUser } from "../../Utils/userSlice";
+import { removeFeed } from "../../Utils/feedSlice";
 
 const NavBar = () => {
   const user = useSelector((store) => store.user);
@@ -13,14 +14,15 @@ const NavBar = () => {
   const handleLogOut = async () => {
     try {
       await axios.post(
-        BASE_URL + "/logout",
+        BASE_URL + "/logout",{},
         
         {
           withCredentials: true,
         }
       );
       dispatch(removeUser());
-      navigate("/login");
+      dispatch(removeFeed());
+      navigate("/auth");
 
     } catch (err) {
       console.log(err);
@@ -30,7 +32,7 @@ const NavBar = () => {
   return (
     <div className="navbar bg-base-300 shadow-md">
       <div className="flex-1">
-        <Link to={"/"} className="btn btn-ghost text-xl">
+        <Link to={"/"} className="btn btn-ghost text-xl hover:bg-transparent">
           DevTinder
         </Link>
       </div>

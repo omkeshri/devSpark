@@ -42,14 +42,13 @@ const userSchema = new mongoose.Schema(
     gender: {
       type: String,
       validate(value) {
-        if (!["Male", "female", "other"].includes(value)) {
+        if (!["male", "female", "other"].includes(value)) {
           throw new Error("Gender is not valid!");
         }
       },
     },
     photoUrl: {
       type: String,
-      default: "url",
       // validate(value){
       //   if(value && !validator.isURL(value)){
       //     throw new Error("Invalid URL")
@@ -75,22 +74,16 @@ userSchema.methods.getJWT = async function () {
   return token;
 };
 
-// userSchema.methods.verifyPassword = async function (passwordInputByUser) {
-//   const user = this;
-//   const passwordHash = user.password;
-//   const isPasswordValid = await bcrypt.compare(
-//     passwordInputByUser,
-//     passwordHash
-//   );
-//   return isPasswordValid;
-// };
-userSchema.methods.verifyPassword = async function (passwordInputByUser) {
-  try {
-    return await bcrypt.compare(passwordInputByUser, this.password);
-  } catch (error) {
-    console.error("Error verifying password:", error);
-    return false; // Fail-safe return in case of an error
-  }
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+  const user = this;
+  const passwordHash = user.password;
+
+  const isPasswordValid = await bcrypt.compare(
+    passwordInputByUser,
+    passwordHash
+  );
+
+  return isPasswordValid;
 };
 
 // Always start a model with capital letter
