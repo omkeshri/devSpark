@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../Utils/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../Utils/constants";
 
 const Login = () => {
@@ -63,7 +63,9 @@ const Login = () => {
             {error && (
               <p className="text-red-500 font-medium">Error: {error}</p>
             )}
+            <div className="text-sm">New User? <Link to={"/signup"} className="text-blue-600 hover:underline hover:underline-offset-2">Signup</Link></div>
           </div>
+
           <div className="card-actions justify-center mt-5">
             <button
               className="btn btn-primary px-10"

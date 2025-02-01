@@ -8,6 +8,7 @@ import appStore from "./Utils/appStore";
 import Feed from "./Components/Feed/Feed";
 import Connections from "./Components/Connections/Connections";
 import ConnectionRequest from "./Components/Connections/ConnectionRequest";
+import Signup from "./Components/Auth/Signup";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/" element={<Body />}>
             <Route path="/" element={<Feed />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/connections" element={<Connections />} />
             <Route path="/connections/request" element={<ConnectionRequest />} />

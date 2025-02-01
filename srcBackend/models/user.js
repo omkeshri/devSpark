@@ -75,14 +75,22 @@ userSchema.methods.getJWT = async function () {
   return token;
 };
 
+// userSchema.methods.verifyPassword = async function (passwordInputByUser) {
+//   const user = this;
+//   const passwordHash = user.password;
+//   const isPasswordValid = await bcrypt.compare(
+//     passwordInputByUser,
+//     passwordHash
+//   );
+//   return isPasswordValid;
+// };
 userSchema.methods.verifyPassword = async function (passwordInputByUser) {
-  const user = this;
-  const passwordHash = user.password;
-  const isPasswordValid = await bcrypt.compare(
-    passwordInputByUser,
-    passwordHash
-  );
-  return isPasswordValid;
+  try {
+    return await bcrypt.compare(passwordInputByUser, this.password);
+  } catch (error) {
+    console.error("Error verifying password:", error);
+    return false; // Fail-safe return in case of an error
+  }
 };
 
 // Always start a model with capital letter
