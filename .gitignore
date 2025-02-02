@@ -1,2 +1,3 @@
 node_modules
 srcBackend/config/database.js
+.env
