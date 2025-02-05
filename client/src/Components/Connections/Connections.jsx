@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { addConnections } from "../../Utils/connectionSlice";
 import NA from "../NAPage/NA";
+import {Link} from "react-router-dom"
 
 const Connections = () => {
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ const Connections = () => {
                 </h2>
                 <h2 className="font-medium">{age + ", " + gender}</h2>
                 <h2 className="font-medium">{about}</h2>
+              <Link to={"/chat/"+_id}><button className="btn btn-primary">Chat</button></Link>
               </div>
             </div>
           );
