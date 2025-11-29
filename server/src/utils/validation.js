@@ -1,22 +1,23 @@
 const validator = require("validator");
+const AppError = require("./error");
 
 const validateSignUpData = (req) => {
   const { firstName, lastName, emailId, password } = req.body;
 
   if (!firstName) {
-    throw new Error("First Name not valid!");
+    throw new AppError(429, "First Name not valid!");
   }
 
   if (!lastName) {
-    throw new Error("First Name not valid!");
+    throw new AppError(429, "Last Name not valid!");
   }
 
   if (!validator.isEmail(emailId)) {
-    throw new Error("Email is not valid.");
+    throw new AppError(429, "Email is not valid.");
   }
 
   if (!validator.isStrongPassword(password)) {
-    throw new Error("Please enter strong password.");
+    throw new AppError(429, "Please enter strong password.");
   }
 };
 

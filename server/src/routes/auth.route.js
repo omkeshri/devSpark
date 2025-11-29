@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const { validateSignUpData } = require("../utils/validation.js");
 const User = require("../models/user.js");
+const AppError = require("../utils/error.js");
 
 const authRouter = express.Router();
 
@@ -12,11 +13,14 @@ authRouter.post("/signup", async (req, res) => {
 
     const { firstName, lastName, emailId, password } = req.body;
 
-    // Encrypt the password
+    const existingUser = await User.findOne({ emailId: emailId });
+    if (existingUser) {
+      throw new AppError(409, "Invalid credentials or user already exist.")
+    }
+
     const passwordHash = await bcrypt.hash(password, 10);
     // console.log(passwordHash);
 
-    //   Creating a new instance of the User model
     const user = new User({
       firstName,
       lastName,
@@ -25,15 +29,28 @@ authRouter.post("/signup", async (req, res) => {
     });
 
     const savedUser = await user.save();
+
+    if (!savedUser) {
+      throw new AppError(500)
+    }
+
     const token = await savedUser.getJWT();
 
-    res.cookie("token", token, {
+    const response = {
+      name: savedUser?.firstName + ' ' + savedUser?.lastName,
+      emailId: savedUser?.emaildId,
+    }
+
+    res.cookie("session_token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
     });
 
-    res.json({ message: "User Added successfully!", data: savedUser });
+    res.json({ message: "User Added successfully!", data: response });
   } catch (err) {
-    res.status(400).send("ERROR : " + err.message);
+    console.log(err)
+    const status = err.status || 500;
+    const message = err.message || "Couldn't create user. Please try again.";
+    res.status(status).json({ status: status, message: message });
   }
 });
 
@@ -50,10 +67,15 @@ authRouter.post("/login", async (req, res) => {
     if (isPasswordValid) {
       const token = await user.getJWT();
 
+      const response = {
+        name: user?.firstName + ' ' + user?.lastName,
+        emailId: user?.emailId,
+      }
+
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
       });
-      res.json({ message: "User Added successfully!", data: user });
+      res.json({ message: "Login successfull!", data: response });
     } else {
       throw new Error("Invalid credentials");
     }
@@ -61,6 +83,8 @@ authRouter.post("/login", async (req, res) => {
     res.status(400).send("ERROR : " + err.message);
   }
 });
+
+authRouter.post("/login/github", )
 
 authRouter.post("/logout", async (req, res) => {
   res.cookie("token", null, {

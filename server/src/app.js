@@ -10,14 +10,14 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
 app.use(cookieParser());
 app.use(express.json());
 
-const authRouter = require("./routes/auth");
+const authRouter = require("./routes/auth.route");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
