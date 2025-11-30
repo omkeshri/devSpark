@@ -3,7 +3,7 @@ import { Github, Mail } from "lucide-react";
 import CustomInput from "@/components/input";
 import { AUTH_TABS } from "@/modules/auth/common/constants";
 
-const AuthForm = ({ tab, authFormik, onChange, onBlur, onSubmit, onTabChange }: any) => {
+const AuthForm = ({ tab, authFormik, onChange, onBlur, onSubmit, onTabChange, onGoogleClick, onGithubClick }: any) => {
     return (
         <div className="auth-container">
             <div className="auth-wrapper">
@@ -34,6 +34,7 @@ const AuthForm = ({ tab, authFormik, onChange, onBlur, onSubmit, onTabChange }: 
                             error={authFormik.touched.fullName && !!authFormik.errors.fullName}
                             errorMessage={authFormik.errors.fullName}
                             required
+                            name="name"
                         />
                     )}
 
@@ -47,6 +48,7 @@ const AuthForm = ({ tab, authFormik, onChange, onBlur, onSubmit, onTabChange }: 
                         error={authFormik.touched.email && !!authFormik.errors.email}
                         errorMessage={authFormik.errors.email}
                         required
+                        name="email"
                     />
 
                     <CustomInput
@@ -90,8 +92,8 @@ const AuthForm = ({ tab, authFormik, onChange, onBlur, onSubmit, onTabChange }: 
                     </div>
 
                     <div className="auth-social">
-                        <button className="auth-social-btn"><Github /> GitHub</button>
-                        <button className="auth-social-btn"><Mail /> Google</button>
+                        <button className="auth-social-btn" onClick={onGithubClick}><Github /> GitHub</button>
+                        <button className="auth-social-btn" onClick={onGoogleClick}><Mail /> Google</button>
                     </div>
                 </div>
 

@@ -38,4 +38,40 @@ export default class AuthService {
 
         }
     }
+
+    async GoogleSignIn(payload: any) {
+        try {
+            const res = await api.post('/login/google', payload);
+            return res?.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async GithubSignIn(payload: any) {
+        try {
+            const res = await api.post('/login/github', payload);
+            return res?.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async VerifyUser() {
+        try {
+            const res = await api.get('/verify');
+            return res?.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async LogOut() {
+        try {
+            const res = await api.get('/logout');
+            return res?.data;
+        } catch (err) {
+            throw err;
+        }
+    }
 }
